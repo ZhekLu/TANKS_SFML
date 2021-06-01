@@ -1,10 +1,19 @@
 #include "Enemy.h"
 
-Enemy::Enemy(float speed, Rotation rotation) : Player(rotation)
+Enemy::Enemy(float speed, Rotation rotation) : Player()
 {
-	canMove = false; 
+	//variables
+	canMove = false;
 	movementSpeed = speed;
-	connectWithPlayer = false; 
+	connectWithPlayer = false;
+	this->rotation = rotation;
+
+	// init part from Player;
+	initVariables();
+	initTexture();
+	initSprite();
+
+	Rotate(rotation);
 }
 
 void Enemy::update()

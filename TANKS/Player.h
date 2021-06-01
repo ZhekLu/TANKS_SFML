@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include<SFML/Graphics.hpp>
 #include<SFML/System.hpp>
@@ -20,7 +21,7 @@ public:
 	//functions
 	void render(RenderTarget *target);
 
-	void update();
+	virtual void update();
 	void updateAttack();
 	const bool canAttack();
 
@@ -28,7 +29,9 @@ public:
 	void Move(const float ax, const float ay);
 	void Move(Rotation way, float step = CELL);
 	void Fire();
-private:
+protected:
+	//ctor for Enemy class
+	Player(){}
 	//elements
 	Sprite body;
 	Texture texture; 
@@ -40,10 +43,11 @@ private:
 	float attackCooldown;
 	float attackCooldownMax;
 	//functions
-	void initTexture();
+	virtual void initTexture();
 	void initSprite();
 	void initVariables();
 
 	const Vector2f& bulletStartPos() const; 
 };
 
+#endif //PLAYER_H
