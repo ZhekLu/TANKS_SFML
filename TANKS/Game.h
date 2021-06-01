@@ -15,6 +15,9 @@ public:
 
 	//functions
 	void run();
+
+	void updatePollEvents();
+	void updateInput();
 	void update();
 	void render();
 private:

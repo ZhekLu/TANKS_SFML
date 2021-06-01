@@ -15,7 +15,8 @@ public:
 	void render(RenderTarget *target);
 	void update();
 	void Rotate(Rotation rotation);
-
+	void Move(const float ax, const float ay);
+	void Move(Rotation way, float step = CELL);
 private:
 	//elements
 	Sprite body;

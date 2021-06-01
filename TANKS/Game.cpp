@@ -23,7 +23,7 @@ void Game::run()
 	}
 }
 
-void Game::update()
+void Game::updatePollEvents()
 {
 	Event e;
 	while (window->pollEvent(e))
@@ -33,7 +33,36 @@ void Game::update()
 		if (e.type == Event::KeyPressed && e.key.code == Keyboard::Escape)
 			window->close();
 	}
-	
+}
+
+void Game::updateInput()
+{
+	//Move player
+
+	if (Keyboard::isKeyPressed(sf::Keyboard::A))
+		player->Move(Rotation::LEFT, 2.f);
+	else if (Keyboard::isKeyPressed(sf::Keyboard::W))
+		player->Move(Rotation::UP, 2.f);
+	else if (Keyboard::isKeyPressed(sf::Keyboard::D))
+		player->Move(Rotation::RIGHT, 2.f);
+	else if (Keyboard::isKeyPressed(sf::Keyboard::S))
+		player->Move(Rotation::DOWN, 2.f);
+
+	//Another Way
+	//if(Keyboard::isKeyPressed(sf::Keyboard::A))
+	//	player->Move(-1.f, 0.f);
+	//if(Keyboard::isKeyPressed(sf::Keyboard::W))
+	//	player->Move(0.f, -1.f);
+	//if (Keyboard::isKeyPressed(sf::Keyboard::D))
+	//	player->Move(1.f, 0.f);
+	//if (Keyboard::isKeyPressed(sf::Keyboard::S))
+	//	player->Move(0.f, 1.f);
+}
+
+void Game::update()
+{
+	updatePollEvents();
+	updateInput();
 }
 
 void Game::render()
@@ -55,5 +84,5 @@ void Game::initWindow()
 
 void Game::initPlayer()
 {
-	player = new Player();
+	player = new Player(Rotation::DOWN);
 }
