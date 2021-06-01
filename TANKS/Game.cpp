@@ -4,6 +4,7 @@
 Game::Game()
 {
 	initWindow();
+	initTextures();
 	initPlayer();
 }
 
@@ -11,6 +12,9 @@ Game::~Game()
 {
 	delete player;
 	delete window;
+
+	for (auto& t : this->textures)
+		delete t.second; 
 }
 
 //functions
@@ -48,6 +52,8 @@ void Game::updateInput()
 	else if (Keyboard::isKeyPressed(sf::Keyboard::S))
 		player->Move(Rotation::DOWN, 2.f);
 
+	if (Keyboard::isKeyPressed(sf::Keyboard::C) && this->player->canAttack())
+		player->Fire();
 	//Another Way
 	//if(Keyboard::isKeyPressed(sf::Keyboard::A))
 	//	player->Move(-1.f, 0.f);
@@ -59,10 +65,30 @@ void Game::updateInput()
 	//	player->Move(0.f, 1.f);
 }
 
+void Game::updateBullets()
+{
+	unsigned short counter = 0; 
+	for (auto* bullet : player->bullets)
+	{
+		bullet->update();
+
+		if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
+		{	
+			delete player->bullets.at(counter);
+			player->bullets.erase(player->bullets.begin() + counter);
+			counter--;
+		}
+		counter++; 
+	}
+}
+
 void Game::update()
 {
 	updatePollEvents();
 	updateInput();
+
+	player->update();
+	updateBullets();
 }
 
 void Game::render()
@@ -85,4 +111,10 @@ void Game::initWindow()
 void Game::initPlayer()
 {
 	player = new Player(Rotation::DOWN);
+}
+
+void Game::initTextures()
+{
+	this->textures[1] = new Texture();
+	this->textures[1]->loadFromFile("resourses/ironBlock40px");
 }

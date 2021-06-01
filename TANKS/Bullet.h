@@ -6,7 +6,7 @@
 class Bullet
 {
 public:
-	Bullet(float pos_x, float pos_y, float dir_x, float dir_y, float speed);
+	Bullet(sf::Vector2f direction, sf::Vector2f startPos, float speed);
 	~Bullet();
 	//Connect
 	const sf::FloatRect getBounds() const; 
@@ -20,6 +20,6 @@ private:
 	int size = 10; 
 
 	sf::Vector2f direction;
-	float movementSpeed; 
+	float movementSpeed;
 };
 

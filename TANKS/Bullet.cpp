@@ -1,14 +1,15 @@
 #include "Bullet.h"
 
-Bullet::Bullet(float pos_x, float pos_y, float dir_x, float dir_y, float speed)
+Bullet::Bullet( sf::Vector2f direction, sf::Vector2f startPos, float speed)
 {
-	body = sf::CircleShape(size);
+	//body
+	body = sf::CircleShape(size / 2);
 	body.setFillColor(sf::Color(255, 255, 255));
+	body.setPosition(startPos);
 
-	body.setPosition(pos_x, pos_y);
-	this->direction.x = dir_x;
-	this->direction.y = dir_y;
-	this->movementSpeed = speed; 
+	//movement direction
+	this->direction = direction; 
+	movementSpeed = speed; 
 }
 
 Bullet::~Bullet()
@@ -22,7 +23,7 @@ const sf::FloatRect Bullet::getBounds() const
 
 void Bullet::update()
 {
-	body.move(movementSpeed * direction);
+	body.move(direction * movementSpeed); 
 }
 
 void Bullet::render(sf::RenderTarget* target)

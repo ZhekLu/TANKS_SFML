@@ -4,7 +4,7 @@ Player::Player(Rotation rotation)
 {
 	//variables
 	this->rotation = rotation; 
-
+	initVariables(); 
 	initTexture();
 	initSprite();
 
@@ -13,15 +13,41 @@ Player::Player(Rotation rotation)
 
 Player::~Player()
 {
+	for (auto* i : this->bullets)
+		delete i;
+}
+
+const Vector2f& Player::getPos() const
+{
+	return body.getPosition();
 }
 
 void Player::render(RenderTarget* target)
 {
 	target->draw(body); 
+	for (auto* bullet : this->bullets)
+		bullet->render(target); 
 }
 
 void Player::update()
 {
+	updateAttack();
+}
+
+void Player::updateAttack()
+{
+	if (this->attackCooldown < this->attackCooldownMax)
+		attackCooldown += 0.3f; 
+}
+
+const bool Player::canAttack()
+{
+	if (attackCooldown >= attackCooldownMax)
+	{
+		attackCooldown = 0.f; 
+		return true; 
+	}
+	return false;
 }
 
 void Player::Rotate(Rotation rotation)
@@ -70,6 +96,28 @@ void Player::Move(Rotation way, float step)
 	}
 }
 
+void Player::Fire()
+{
+	Vector2f dir(0, 0);
+	switch (rotation)
+	{
+	case Rotation::LEFT:
+		dir.x = -1.f; 
+		break;
+	case Rotation::UP:
+		dir.y = -1.f;
+		break;
+	case Rotation::RIGHT:
+		dir.x = 1.f; 
+		break;
+	case Rotation::DOWN:
+		dir.y = 1.f; 
+		break;
+	}
+	Bullet* newBullet = new Bullet(dir, this->bulletStartPos(), 5.f);
+	this->bullets.push_back(newBullet); 
+}
+
 void Player::initTexture()
 {
 	if (!texture.loadFromFile("resourses/playerTileset.png"))
@@ -79,4 +127,37 @@ void Player::initTexture()
 void Player::initSprite()
 {
 	body.setTexture(this->texture);
+}
+
+void Player::initVariables()
+{
+	this->attackCooldownMax = 10.f;
+	this->attackCooldown = attackCooldownMax; 
+
+	bodyHeight = 40;
+	bodyWidht = 35; 
+}
+
+const Vector2f& Player::bulletStartPos() const
+{
+	float displacement = (bodyWidht - bodyWidht * 3 / 16) / 2.f; // for 16x16 tank picture;
+	float x = body.getPosition().x, y = body.getPosition().y; 
+	switch (rotation)
+	{
+	case Rotation::LEFT:
+		y += displacement;
+		break;
+	case Rotation::UP:
+		x += displacement;
+		break;
+	case Rotation::RIGHT:
+		x += bodyHeight;
+		y += displacement;
+		break;
+	case Rotation::DOWN:
+		x += displacement;
+		y += bodyHeight;
+		break;
+	}
+	return Vector2f(x, y);
 }
