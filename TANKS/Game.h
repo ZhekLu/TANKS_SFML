@@ -4,8 +4,11 @@
 #include<SFML/Graphics.hpp>
 #include<SFML/System.hpp>
 #include<map>
+#include<iostream>
 #include"definecells.h"
 #include"Player.h"
+#include"Enemy.h"
+
 using namespace sf; 
 
 class Game
@@ -26,11 +29,16 @@ private:
 	//elements
 	RenderWindow* window; 
 	Player* player; 
+	std::vector<Enemy*> enemies;
+
 	//resourses
 	std::map<int, Texture*> textures; 
+
 	//fiunctions
 	void initWindow();
 	void initPlayer();
 	void initTextures();
+	void initEnemies();
 };
-#endif // !GAME_H
+
+#endif // GAME_H

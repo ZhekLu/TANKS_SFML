@@ -6,6 +6,7 @@ Game::Game()
 	initWindow();
 	initTextures();
 	initPlayer();
+	initEnemies();
 }
 
 Game::~Game()
@@ -67,12 +68,14 @@ void Game::updateInput()
 
 void Game::updateBullets()
 {
+	//player
 	unsigned short counter = 0; 
 	for (auto* bullet : player->bullets)
 	{
 		bullet->update();
 
-		if (bullet->getBounds().top + bullet->getBounds().height < 0.f)
+		if (bullet->getBounds().top < 0.f || bullet->getBounds().top >= HEIGHT
+			|| bullet->getBounds().left < 0.f || bullet->getBounds().left >= WIDTH)
 		{	
 			delete player->bullets.at(counter);
 			player->bullets.erase(player->bullets.begin() + counter);
@@ -80,14 +83,38 @@ void Game::updateBullets()
 		}
 		counter++; 
 	}
+	//enemies
+	counter = 0;
+	for (auto* enemy : enemies)
+	{
+		for (auto* bullet : enemy->bullets)
+		{
+			bullet->update();
+
+			if (bullet->getBounds().top < 0.f || bullet->getBounds().top >= HEIGHT
+				|| bullet->getBounds().left < 0.f || bullet->getBounds().left >= WIDTH)
+			{
+				delete enemy->bullets.at(counter);
+				enemy->bullets.erase(enemy->bullets.begin() + counter);
+				counter--;
+			}
+			counter++;
+		}
+	}
 }
 
 void Game::update()
 {
+	//system
 	updatePollEvents();
-	updateInput();
 
+	//player
+	updateInput();
 	player->update();
+
+	//enemies
+	for (auto* e : enemies)
+		e->update();
 	updateBullets();
 }
 
@@ -96,6 +123,8 @@ void Game::render()
 	window->clear();
 
 	player->render(window);
+	for (auto* enemy : enemies)
+		enemy->render(window);
 
 	window->display();
 }
@@ -117,4 +146,10 @@ void Game::initTextures()
 {
 	this->textures[1] = new Texture();
 	this->textures[1]->loadFromFile("resourses/ironBlock40px");
+}
+
+void Game::initEnemies()
+{
+	Enemy* newE = new Enemy(1.f);
+	enemies.push_back(newE);
 }

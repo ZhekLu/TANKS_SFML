@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BULLET_H
+#define BULLET_H
 
 #include<SFML/Graphics.hpp>
 #include<iostream>
@@ -23,3 +24,4 @@ private:
 	float movementSpeed;
 };
 
+#endif //BULLET_H
