@@ -20,6 +20,7 @@ public:
 	const Vector2f& getPos() const;
 	const sf::FloatRect getBounds() const;
 
+	bool loseHp(int damage = 1);
 	void setPos(float ax, float ay);
 	//functions
 	void render(RenderTarget *target);
@@ -40,6 +41,7 @@ protected:
 	Texture texture; 
 	//variables
 	Rotation rotation; 
+	int hp;
 
 	int bodyHeight; 
 	int bodyWidht; 

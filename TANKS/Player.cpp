@@ -27,6 +27,12 @@ const sf::FloatRect Player::getBounds() const
 	return this->body.getGlobalBounds();
 }
 
+bool Player::loseHp(int damage)
+{
+	this->hp -= damage; 
+	return hp > 0;
+}
+
 void Player::setPos(float ax, float ay)
 {
 	this->body.setPosition(ax, ay);
@@ -146,6 +152,8 @@ void Player::initVariables()
 
 	bodyHeight = 40;
 	bodyWidht = 35; 
+
+	hp = 5; 
 }
 
 const Vector2f& Player::bulletStartPos() const
