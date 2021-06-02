@@ -28,7 +28,7 @@ void Enemy::update()
 	}
 	if (!canMove)
 	{
-		//rotation = 
+		rotation = Rotation(rand() % 4);
 		canMove = true; 
 	}
 	this->Move(rotation, movementSpeed);
