@@ -5,6 +5,7 @@ Game::Game()
 {
 	initWindow();
 	initTextures();
+	initMap();
 	initPlayer();
 	initEnemies();
 }
@@ -255,7 +256,11 @@ void Game::render()
 {
 	window->clear();
 
+	for (auto* b : levelBarrier)
+		b->render(window);
+
 	player->render(window);
+
 	for (auto* enemy : enemies)
 		enemy->render(window);
 
@@ -287,4 +292,58 @@ void Game::initEnemies()
 {
 	Enemy* newE = new Enemy(1.f);
 	enemies.push_back(newE);
+}
+
+void Game::initMap()
+{
+	std::ifstream level("resourses/level1.txt");
+	if (level.is_open())
+	{
+		std::string str;
+		int rows = 0; 
+
+		Barrier* newIt;
+		while (getline(level, str))
+		{
+			int displacement = 0;
+			if(str.length() > 5)
+				for (int i = 0; i < str.length() && i < WIDTH / (CELL * 2);)
+				{
+					if (str[i] == '0')
+					{
+						displacement += 2 * CELL;
+						i++;
+					}
+					else
+					{
+						if((str[i] - '0') % 2)
+							newIt = new Barrier(displacement, rows * 2 * CELL, str[i] - '0', textures[Barrier::IRON]);
+						else 
+							newIt = new Barrier(displacement, rows * 2 * CELL, str[i] - '0', textures[Barrier::BRICK]);
+						levelBarrier.push_back(newIt);
+						switch (str[i])
+						{
+						case '1':
+						case '2':
+						case '5':
+						case '6':
+							i += 2;
+							displacement += 4 * CELL;
+							break;
+						case '3':
+						case '4':
+							i++; 
+							displacement += 2 * CELL;
+							break;
+						}
+					}
+				}
+			rows++;
+		}
+		level.close();
+	}
+	else
+	{
+		std::cout << "ERROR::LOAD::LEVEL::GAME::resourses/level1.txt" << std::endl; 
+	}
 }

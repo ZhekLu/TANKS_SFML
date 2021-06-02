@@ -1,8 +1,8 @@
 #include "Barrier.h"
 
-Barrier::Barrier(int ax, int ay, Type type, sf::Texture& texture)
+Barrier::Barrier(int ax, int ay, int type, sf::Texture& texture)
 {
-    this->type = type; 
+    this->type = (Type)type; 
 
     //init sprite
     body.setTexture(texture);

@@ -3,13 +3,15 @@
 
 #include<SFML/Graphics.hpp>
 #include<SFML/System.hpp>
-#include<map>
 #include<iostream>
 #include"definecells.h"
 #include"Player.h"
 #include"Enemy.h"
 #include"Barrier.h"
 
+#include<fstream> /*for textures*/
+#include<string>
+#include<map>
 using namespace sf; 
 
 class Game
@@ -34,7 +36,7 @@ private:
 	RenderWindow* window; 
 	Player* player; 
 	std::vector<Enemy*> enemies;
-
+	std::vector<Barrier*> levelBarrier; 
 	//resourses
 	std::map<int, Texture> textures; 
 
@@ -43,6 +45,7 @@ private:
 	void initPlayer();
 	void initTextures();
 	void initEnemies();
+	void initMap();
 };
 
 #endif // GAME_H
