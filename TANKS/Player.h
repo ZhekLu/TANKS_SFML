@@ -17,7 +17,10 @@ public:
 	std::vector<Bullet*> bullets; 
 
 	//connect
-	const Vector2f& getPos() const; 
+	const Vector2f& getPos() const;
+	const sf::FloatRect getBounds() const;
+
+	void setPos(float ax, float ay);
 	//functions
 	void render(RenderTarget *target);
 

@@ -22,6 +22,16 @@ const Vector2f& Player::getPos() const
 	return body.getPosition();
 }
 
+const sf::FloatRect Player::getBounds() const
+{
+	return this->body.getGlobalBounds();
+}
+
+void Player::setPos(float ax, float ay)
+{
+	this->body.setPosition(ax, ay);
+}
+
 void Player::render(RenderTarget* target)
 {
 	target->draw(body); 
@@ -114,14 +124,14 @@ void Player::Fire()
 		dir.y = 1.f; 
 		break;
 	}
-	Bullet* newBullet = new Bullet(dir, this->bulletStartPos(), 5.f);
+	Bullet* newBullet = new Bullet(dir, this->bulletStartPos(), 4.f);
 	this->bullets.push_back(newBullet); 
 }
 
 void Player::initTexture()
 {
 	if (!texture.loadFromFile("resourses/playerTileset.png"))
-		std::cout << "ERR::LOADFROMFILE::resourses/playerTileset.png" << std::endl;
+			std::cout << "ERR::LOADFROMFILE::resourses/playerTileset.png" << std::endl;
 }
 
 void Player::initSprite()
@@ -131,7 +141,7 @@ void Player::initSprite()
 
 void Player::initVariables()
 {
-	this->attackCooldownMax = 10.f;
+	this->attackCooldownMax = 20.f;
 	this->attackCooldown = attackCooldownMax; 
 
 	bodyHeight = 40;
