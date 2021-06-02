@@ -146,6 +146,54 @@ void Game::updateSceneCollision()
 	}
 }
 
+void Game::updateTanksCollision()
+{
+}
+
+void Game::updateHitting()
+{
+	for (int e = 0; e < enemies.size(); e++)
+	{
+		bool deleted = false; 
+		// player -> enemies
+		for (int b = 0; !deleted && b < player->bullets.size(); b++)
+		{
+			if (enemies[e]->getBounds().intersects(player->bullets[b]->getBounds()))
+			{
+				delete player->bullets[b];
+				player->bullets.erase(player->bullets.begin() + b);
+				b--; 
+
+				if (!enemies[e]->loseHp())
+				{
+					//std::cout << "killed" << std::endl; 
+					deleted = true; 
+					delete enemies[e];
+					enemies.erase(enemies.begin() + e);
+					e--;
+					
+				}
+			}
+		}
+		// enemies -> player
+		for (int b = 0; !deleted && b < enemies[e]->bullets.size(); b++)
+		{
+			if (player->getBounds().intersects(enemies[e]->bullets[b]->getBounds()))
+			{
+				delete enemies[e]->bullets[b];
+				enemies[e]->bullets.erase(enemies[e]->bullets.begin() + b);
+				b--;
+
+				if (!player->loseHp())
+				{
+					//std::cout << "U are killed" << std::endl;
+				}
+			}
+		}
+	}
+
+}
+
 void Game::update()
 {
 	//system
@@ -161,6 +209,7 @@ void Game::update()
 		e->update();
 	//e&p
 	updateBullets();
+	updateHitting();
 }
 
 void Game::render()
