@@ -14,8 +14,9 @@ Game::~Game()
 	delete player;
 	delete window;
 
-	for (auto& t : this->textures)
-		delete t.second; 
+	//if Texture*
+	//for (auto& t : this->textures)
+	//	delete t.second; 
 }
 
 //functions
@@ -276,8 +277,10 @@ void Game::initPlayer()
 
 void Game::initTextures()
 {
-	this->textures[1] = new Texture();
-	this->textures[1]->loadFromFile("resourses/ironBlock40px");
+	if (!textures[Barrier::BRICK].loadFromFile("resourses/brickBlock40px.png"))
+		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/brickBlock40px.png" << std::endl; 
+	if (!textures[Barrier::IRON].loadFromFile("resourses/ironBlock40px.png"))
+		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/ironBlock40px.png" << std::endl;
 }
 
 void Game::initEnemies()

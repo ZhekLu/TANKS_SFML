@@ -8,6 +8,7 @@
 #include"definecells.h"
 #include"Player.h"
 #include"Enemy.h"
+#include"Barrier.h"
 
 using namespace sf; 
 
@@ -35,7 +36,7 @@ private:
 	std::vector<Enemy*> enemies;
 
 	//resourses
-	std::map<int, Texture*> textures; 
+	std::map<int, Texture> textures; 
 
 	//fiunctions
 	void initWindow();
