@@ -55,6 +55,7 @@ void Game::updateInput()
 
 	if (Keyboard::isKeyPressed(sf::Keyboard::C) && this->player->canAttack())
 		player->Fire();
+
 	//Another Way
 	//if(Keyboard::isKeyPressed(sf::Keyboard::A))
 	//	player->Move(-1.f, 0.f);
@@ -148,6 +149,42 @@ void Game::updateSceneCollision()
 
 void Game::updateTanksCollision()
 {
+	for (auto* enemy : enemies)
+	{
+		if (player->getBounds().intersects(enemy->getBounds()))
+		{
+			if (abs(player->getRotation() - enemy->getRotation()) == 2)
+			{
+				player->Move(-2.f);
+				enemy->connectWithPlayer = true;
+				break;
+			}
+			else
+			{
+				switch (player->getRotation())
+				{
+				case LEFT:
+					if(player->getPos().x + 2.f >= enemy->getPos().x + enemy->getBounds().width)
+						player->Move(-2.f);
+					break;
+				case UP:
+					if (player->getPos().y + 2.f >= enemy->getPos().y + enemy->getBounds().height)
+						player->Move(-2.f);
+					break;
+				case RIGHT:
+					if (player->getPos().x + player->getBounds().width <= enemy->getPos().x + 2.f)
+						player->Move(-2.f);
+					break;
+				case DOWN:
+					if (player->getPos().y + player->getBounds().height <= enemy->getPos().y + 2.f)
+						player->Move(-2.f);
+					break;
+				}
+			}
+			enemy->setCanMove(false);
+			
+		}
+	}
 }
 
 void Game::updateHitting()
@@ -202,6 +239,7 @@ void Game::update()
 	//player
 	updateInput();
 	updateSceneCollision();
+	updateTanksCollision();
 	player->update();
 
 	//enemies
