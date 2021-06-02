@@ -3,6 +3,7 @@
 
 #include<SFML/Graphics.hpp>
 #include<iostream>
+#include"definecells.h"
 
 class Bullet
 {
@@ -11,6 +12,7 @@ public:
 	~Bullet();
 	//Connect
 	const sf::FloatRect getBounds() const; 
+	const Rotation getRotation() const;
 
 	//Functions
 	void update();
