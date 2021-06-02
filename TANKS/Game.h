@@ -27,6 +27,7 @@ public:
 	void updateInput();
 	void updateBullets();
 	void updateSceneCollision();
+	void updateLevelBarrierCollisions();
 	void updateTanksCollision();
 	void updateHitting();
 	void update();

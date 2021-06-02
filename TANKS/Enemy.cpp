@@ -28,6 +28,7 @@ void Enemy::update()
 	}
 	if (!canMove)
 	{
+		this->Move(-movementSpeed);
 		rotation = Rotation(rand() % 4);
 		canMove = true; 
 	}
@@ -42,7 +43,7 @@ void Enemy::setCanMove(bool itis)
 void Enemy::initVariables()
 {
 	attackCooldownMax = 20.f;
-	attackCooldown = attackCooldownMax;
+	attackCooldown = 0;
 
 	bodyHeight = 40;
 	bodyWidht = 35;

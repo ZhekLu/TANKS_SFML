@@ -149,6 +149,20 @@ void Game::updateSceneCollision()
 	}
 }
 
+void Game::updateLevelBarrierCollisions()
+{
+	for (auto* br : levelBarrier)
+	{
+		//player
+		if (player->getBounds().intersects(br->getBounds()))
+			player->Move(-2.f);
+		//enemies
+		for (auto* e : enemies)
+			if (e->getBounds().intersects(br->getBounds()))
+				e->setCanMove(false);
+	}
+}
+
 void Game::updateTanksCollision()
 {
 	for (auto* enemy : enemies)
@@ -241,6 +255,7 @@ void Game::update()
 	//player
 	updateInput();
 	updateSceneCollision();
+	updateLevelBarrierCollisions();
 	updateTanksCollision();
 	player->update();
 

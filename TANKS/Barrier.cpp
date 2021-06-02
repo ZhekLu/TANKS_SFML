@@ -10,6 +10,11 @@ Barrier::Barrier(int ax, int ay, int type, sf::Texture& texture)
     body.setPosition(ax, ay); 
 }
 
+const sf::FloatRect Barrier::getBounds() const
+{
+    return this->body.getGlobalBounds();
+}
+
 void Barrier::render(sf::RenderTarget* target)
 {
     target->draw(body);

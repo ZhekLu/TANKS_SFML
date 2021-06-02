@@ -12,6 +12,8 @@ public:
     };
 
     Barrier(int ax, int ay, int type, sf::Texture& texture);
+    //connect 
+    const sf::FloatRect getBounds() const;
     //functions
     void render(sf::RenderTarget* target);
     bool loseHp(Rotation bulletRotation, int damage = 1);
