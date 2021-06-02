@@ -23,6 +23,7 @@ public:
 	void updatePollEvents();
 	void updateInput();
 	void updateBullets();
+	void updateSceneCollision();
 	void update();
 	void render();
 private:

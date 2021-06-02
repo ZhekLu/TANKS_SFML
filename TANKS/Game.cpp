@@ -103,6 +103,49 @@ void Game::updateBullets()
 	}
 }
 
+void Game::updateSceneCollision()
+{
+	//player
+
+	/*left & right*/
+	if (player->getPos().x < 0.f)
+		player->setPos(0.f, player->getPos().y);
+	else if (player->getPos().x + player->getBounds().width > WIDTH)
+		player->setPos(WIDTH - player->getBounds().width, player->getPos().y);
+	/*up & down*/
+	if (player->getPos().y < 0.f)
+		player->setPos(player->getPos().x, 0.f);
+	else if (player->getPos().y + player->getBounds().height > HEIGHT)
+		player->setPos(player->getPos().x, HEIGHT - player->getBounds().height);
+
+	//enemy
+	for (auto* enemy : enemies)
+	{
+		/*left & right*/
+		if (enemy->getPos().x < 0.f)
+		{
+			enemy->setPos(0.f, enemy->getPos().y);
+			enemy->setCanMove(false);
+		}
+		else if (enemy->getPos().x + enemy->getBounds().width > WIDTH)
+		{
+			enemy->setPos(WIDTH - enemy->getBounds().width, enemy->getPos().y);
+			enemy->setCanMove(false);
+		}
+		/*up & down*/
+		if (enemy->getPos().y < 0.f)
+		{
+			enemy->setPos(enemy->getPos().x, 0.f);
+			enemy->setCanMove(false);
+		}
+		else if (enemy->getPos().y + enemy->getBounds().height > HEIGHT)
+		{
+			enemy->setPos(enemy->getPos().x, HEIGHT - enemy->getBounds().height);
+			enemy->setCanMove(false);
+		}
+	}
+}
+
 void Game::update()
 {
 	//system
@@ -110,11 +153,13 @@ void Game::update()
 
 	//player
 	updateInput();
+	updateSceneCollision();
 	player->update();
 
 	//enemies
 	for (auto* e : enemies)
 		e->update();
+	//e&p
 	updateBullets();
 }
 
