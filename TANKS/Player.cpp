@@ -27,6 +27,11 @@ const sf::FloatRect Player::getBounds() const
 	return this->body.getGlobalBounds();
 }
 
+const Rotation Player::getRotation() const
+{
+	return rotation;
+}
+
 bool Player::loseHp(int damage)
 {
 	this->hp -= damage; 
@@ -112,6 +117,25 @@ void Player::Move(Rotation way, float step)
 	}
 }
 
+void Player::Move(float step)
+{
+	switch (rotation)
+	{
+	case Rotation::LEFT:
+		body.move(-step, 0);
+		break;
+	case Rotation::UP:
+		body.move(0, -step);
+		break;
+	case Rotation::RIGHT:
+		body.move(step, 0);
+		break;
+	case Rotation::DOWN:
+		body.move(0, step);
+		break;
+	}
+}
+
 void Player::Fire()
 {
 	Vector2f dir(0, 0);
@@ -143,6 +167,7 @@ void Player::initTexture()
 void Player::initSprite()
 {
 	body.setTexture(this->texture);
+	body.setPosition(19 * CELL, HEIGHT - bodyHeight);
 }
 
 void Player::initVariables()

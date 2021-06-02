@@ -19,7 +19,9 @@ private:
 	float movementSpeed;
 
 	//functions
+	void initVariables() override;
 	void initTexture() override;
+	void initSprite() override; 
 };
 
 #endif // ENEMY_H

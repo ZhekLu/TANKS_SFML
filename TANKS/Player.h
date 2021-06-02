@@ -19,6 +19,7 @@ public:
 	//connect
 	const Vector2f& getPos() const;
 	const sf::FloatRect getBounds() const;
+	const Rotation getRotation() const;
 
 	bool loseHp(int damage = 1);
 	void setPos(float ax, float ay);
@@ -32,6 +33,8 @@ public:
 	void Rotate(Rotation rotation);
 	void Move(const float ax, const float ay);
 	void Move(Rotation way, float step = CELL);
+	void Move(float step = CELL);
+
 	void Fire();
 protected:
 	//ctor for Enemy class
@@ -49,8 +52,8 @@ protected:
 	float attackCooldownMax;
 	//functions
 	virtual void initTexture();
-	void initSprite();
-	void initVariables();
+	virtual void initSprite();
+	virtual void initVariables();
 
 	const Vector2f& bulletStartPos() const; 
 };
