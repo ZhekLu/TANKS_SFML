@@ -12,6 +12,24 @@ Enemy::Enemy(float speed, Rotation rotation) : Player()
 	initVariables();
 	initTexture();
 	initSprite();
+	body.setPosition(13 * CELL + 2, 0);
+
+	Rotate(rotation);
+}
+
+Enemy::Enemy(sf::Vector2f& spawnPos, float speed, Rotation rotation)
+{
+	//variables
+	canMove = rand() % 2;
+	movementSpeed = speed;
+	connectWithPlayer = false;
+	this->rotation = rotation;
+
+	// init part from Player;
+	initVariables();
+	initTexture();
+	initSprite();
+	body.setPosition(spawnPos);
 
 	Rotate(rotation);
 }
@@ -60,5 +78,4 @@ void Enemy::initTexture()
 void Enemy::initSprite()
 {
 	body.setTexture(this->texture);
-	body.setPosition(13 * CELL + 2, 0);
 }

@@ -32,9 +32,14 @@ const Rotation Player::getRotation() const
 	return rotation;
 }
 
+const int Player::getHp() const
+{
+	return hp;
+}
+
 bool Player::loseHp(int damage)
 {
-	this->hp -= damage; 
+	this->hp -= damage;
 	return hp > 0;
 }
 

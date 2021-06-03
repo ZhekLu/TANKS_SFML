@@ -6,6 +6,7 @@ class Enemy : public Player
 {
 public:
 	Enemy(float speed, Rotation rotation = Rotation::DOWN);
+	Enemy(sf::Vector2f& spawnPos, float speed, Rotation rotation = Rotation::DOWN);
 
 	//variables
 	bool connectWithPlayer;

@@ -20,6 +20,7 @@ public:
 	const Vector2f& getPos() const;
 	const sf::FloatRect getBounds() const;
 	const Rotation getRotation() const;
+	const int getHp() const;
 
 	bool loseHp(int damage = 1);
 	void setPos(float ax, float ay);

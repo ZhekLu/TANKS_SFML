@@ -30,16 +30,30 @@ public:
 	void updateLevelBarrierCollisions();
 	void updateTanksCollision();
 	void updateHitting();
+	void updateEnemies();
+	void updateGUI();
 	void update();
 	void render();
 private:
+	//variables
+	bool gameIsOver = false; 
+
+	int spawnEnemyTimer;
+	int spawnEnemyTimerMax;
+	Vector2f spawnPoints[7];
+
 	//elements
 	RenderWindow* window; 
 	Player* player; 
 	std::vector<Enemy*> enemies;
 	std::vector<Barrier*> levelBarrier; 
+	Sprite eagle; 
 	//resourses
 	std::map<int, Texture> textures; 
+
+	//GUI
+	Font font; 
+	Text gameOverText;
 
 	//fiunctions
 	void initWindow();
@@ -47,6 +61,7 @@ private:
 	void initTextures();
 	void initEnemies();
 	void initMap();
+	void initGUI();
 };
 
 #endif // GAME_H

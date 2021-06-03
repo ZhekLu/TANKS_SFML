@@ -5,6 +5,7 @@ Game::Game()
 {
 	initWindow();
 	initTextures();
+	initGUI();
 	initMap();
 	initPlayer();
 	initEnemies();
@@ -25,7 +26,9 @@ void Game::run()
 {
 	while (window->isOpen())
 	{
-		this->update();
+		updatePollEvents();
+		if(!gameIsOver)
+			this->update();
 		this->render();
 	}
 }
@@ -107,13 +110,21 @@ void Game::updateBullets()
 				brCounter++;
 			}
 		}
+		if (!deleted && bullet->getBounds().intersects(eagle.getGlobalBounds()))
+		{
+			gameIsOver = true; 
+			delete player->bullets.at(counter);
+			player->bullets.erase(player->bullets.begin() + counter);
+			deleted = true;
+			counter--;
+		}
 		counter++; 
 	}
 
 	//enemies
-	counter = 0;
 	for (auto* enemy : enemies)
 	{
+		counter = 0;
 		for (auto* bullet : enemy->bullets)
 		{
 			bullet->update();
@@ -147,6 +158,14 @@ void Game::updateBullets()
 					}
 					brCounter++; 
 				}
+			}
+			if (!deleted && bullet->getBounds().intersects(eagle.getGlobalBounds()))
+			{
+				gameIsOver = true;
+				delete enemy->bullets.at(counter);
+				enemy->bullets.erase(enemy->bullets.begin() + counter);
+				deleted = true;
+				counter--;
 			}
 			counter++;
 		}
@@ -209,6 +228,12 @@ void Game::updateLevelBarrierCollisions()
 			if (e->getBounds().intersects(br->getBounds()))
 				e->setCanMove(false);
 	}
+	//for eagle;
+	if (player->getBounds().intersects(eagle.getGlobalBounds()))
+		player->Move(-2.f);
+	for (auto* e : enemies)
+		if (e->getBounds().intersects(eagle.getGlobalBounds()))
+			e->setCanMove(false);
 }
 
 void Game::updateTanksCollision()
@@ -288,6 +313,7 @@ void Game::updateHitting()
 				if (!player->loseHp())
 				{
 					//std::cout << "U are killed" << std::endl;
+					gameIsOver = true; 
 				}
 			}
 		}
@@ -295,11 +321,29 @@ void Game::updateHitting()
 
 }
 
+void Game::updateEnemies()
+{
+	static int i = 0;
+	spawnEnemyTimer++;
+	if (spawnEnemyTimer >= spawnEnemyTimerMax)
+	{
+		Enemy* newE = new Enemy(spawnPoints[i], 1.f);
+		enemies.push_back(newE);
+		spawnEnemyTimer = 0;
+		i++;
+		if (i > 6)
+			i = 0;
+	}
+}
+
+void Game::updateGUI()
+{
+}
+
 void Game::update()
 {
 	//system
-	updatePollEvents();
-
+	updateGUI();
 	//player
 	updateInput();
 	updateSceneCollision();
@@ -308,6 +352,7 @@ void Game::update()
 	player->update();
 
 	//enemies
+	updateEnemies();
 	for (auto* e : enemies)
 		e->update();
 	//e&p
@@ -322,10 +367,14 @@ void Game::render()
 	for (auto* b : levelBarrier)
 		b->render(window);
 
+	window->draw(eagle);
+
 	player->render(window);
 
 	for (auto* enemy : enemies)
 		enemy->render(window);
+	if(gameIsOver)
+		window->draw(gameOverText);
 
 	window->display();
 }
@@ -345,6 +394,8 @@ void Game::initPlayer()
 
 void Game::initTextures()
 {
+	if (!textures[7].loadFromFile("resourses/eagle40px.png"))
+		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/eagle40px.png" << std::endl;
 	if (!textures[Barrier::BRICK].loadFromFile("resourses/brickBlock40px.png"))
 		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/brickBlock40px.png" << std::endl; 
 	if (!textures[Barrier::IRON].loadFromFile("resourses/ironBlock40px.png"))
@@ -353,8 +404,15 @@ void Game::initTextures()
 
 void Game::initEnemies()
 {
-	Enemy* newE = new Enemy(1.f);
-	enemies.push_back(newE);
+	spawnEnemyTimerMax = 300;
+	spawnEnemyTimer = spawnEnemyTimerMax;
+
+	spawnPoints[0] = Vector2f(0, 0);
+	spawnPoints[6] = Vector2f(WIDTH - 35, 0);
+	spawnPoints[2] = Vector2f(10 * CELL, 0);
+	spawnPoints[5] = Vector2f(WIDTH - 10 * CELL - 35, 0);
+	spawnPoints[3] = Vector2f(18 * CELL, 0);
+	spawnPoints[4] = Vector2f(WIDTH - 18 * CELL - 35, 0);
 }
 
 void Game::initMap()
@@ -376,6 +434,13 @@ void Game::initMap()
 					{
 						displacement += 2 * CELL;
 						i++;
+					}
+					else if (str[i] == 'e')
+					{
+						eagle.setTexture(textures[7]);
+						eagle.setPosition(displacement, rows * 2 * CELL);
+						displacement += 4 * CELL;
+						i += 2; 
 					}
 					else
 					{
@@ -409,4 +474,18 @@ void Game::initMap()
 	{
 		std::cout << "ERROR::LOAD::LEVEL::GAME::resourses/level1.txt" << std::endl; 
 	}
+}
+
+void Game::initGUI()
+{
+	//GAME OVER txt
+	if (!font.loadFromFile("resourses/PixellettersFull.ttf"))
+		std::cout << "ERROR::LOAD::FONT::GAME::resourses/PixellettersFull.ttf" << std::endl;
+	gameOverText.setFont(font);
+	gameOverText.setCharacterSize(70);
+	gameOverText.setFillColor(Color::White);
+	gameOverText.setString("Game over!");
+	gameOverText.setPosition(WIDTH / 2- gameOverText.getGlobalBounds().width / 2.f,
+		HEIGHT / 2 - gameOverText.getGlobalBounds().height / 2.f);
+
 }
