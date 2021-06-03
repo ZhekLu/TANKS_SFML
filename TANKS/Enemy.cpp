@@ -66,7 +66,7 @@ void Enemy::initVariables()
 	bodyHeight = 40;
 	bodyWidht = 35;
 
-	hp = 3;
+	hp = 2;
 }
 
 void Enemy::initTexture()

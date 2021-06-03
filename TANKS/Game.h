@@ -34,6 +34,7 @@ public:
 	void updateEnemies();
 	void updateGUI();
 	void update();
+	void renderGUI();
 	void render();
 private:
 	//variables - system
@@ -60,6 +61,10 @@ private:
 	//GUI
 	Font font; 
 	Text gameEndText;
+	Text lifeCountText;
+	sf::RectangleShape widgetGUI;
+	Sprite widgetEnemy; 
+	Sprite flag; 
 
 	//fiunctions
 	void initWindow();

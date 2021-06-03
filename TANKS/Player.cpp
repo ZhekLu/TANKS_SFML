@@ -40,6 +40,8 @@ const int Player::getHp() const
 bool Player::loseHp(int damage)
 {
 	this->hp -= damage;
+	if (hp < 0)
+		hp = 0;
 	return hp > 0;
 }
 

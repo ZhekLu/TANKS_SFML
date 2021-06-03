@@ -396,9 +396,33 @@ void Game::update()
 	updateHitting();
 }
 
+void Game::renderGUI()
+{
+	window->draw(widgetGUI);
+	for (int i = 0, rows = 0; i < enemiesQuantityMax - enemiesQuantityKilled; i ++)
+	{
+		if (!(i % 2))
+		{
+			widgetEnemy.setPosition(30 + WIDTH, rows * CELL * 2);
+			window->draw(widgetEnemy);
+		}
+		if (i % 2)
+		{
+			widgetEnemy.setPosition(WIDTH + 55, rows * CELL * 2);
+			window->draw(widgetEnemy);
+			rows++;
+		}
+	}
+	window->draw(flag);
+	lifeCountText.setString(String(std::to_string(player->getHp()))); 
+	window->draw(lifeCountText);
+}
+
 void Game::render()
 {
 	window->clear();
+
+	renderGUI();
 
 	for (auto* b : levelBarrier)
 		b->render(window);
@@ -448,6 +472,13 @@ void Game::initTextures()
 		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/brickBlock40px.png" << std::endl; 
 	if (!textures[Barrier::IRON].loadFromFile("resourses/ironBlock40px.png"))
 		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/ironBlock40px.png" << std::endl;
+	if (!textures[20].loadFromFile("resourses/currEQuantitu.png"))
+		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/currEQuantitu.png" << std::endl;
+	if(!textures[8].loadFromFile("resourses/flag.png"))
+		std::cout << "ERROR::LOAD::TEXTURE::GAME::resourses/flag.png" << std::endl;
+	//forFlag.createMaskFromColor(Color(76, 80, 76));
+	//textures[8].loadFromImage(forFlag);
+		
 }
 
 void Game::initEnemies()
@@ -536,6 +567,20 @@ void Game::initGUI()
 	gameEndText.setFont(font);
 	gameEndText.setCharacterSize(70);
 	gameEndText.setFillColor(Color::White);
+
+	widgetGUI.setSize(Vector2f(8 * CELL, HEIGHT));
+	widgetGUI.setFillColor(Color(93, 96, 90));
+	widgetGUI.setPosition(WIDTH, 0);
+
+	widgetEnemy.setTexture(textures[20]);
+	
+	flag.setTexture(textures[8]);
+	flag.setPosition(WIDTH + 10, 40 * CELL);
+
+	lifeCountText.setFont(font);
+	lifeCountText.setCharacterSize(40);
+	lifeCountText.setFillColor(Color::White);
+	lifeCountText.setPosition(WIDTH + 40, 42 * CELL);
 	//gameEndText.setString("Game over!");
 	/*gameEndText.setPosition(WIDTH / 2- gameEndText.getGlobalBounds().width / 2.f,
 		HEIGHT / 2 - gameEndText.getGlobalBounds().height / 2.f);*/
