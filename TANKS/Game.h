@@ -29,6 +29,7 @@ public:
 	void updateSceneCollision();
 	void updateLevelBarrierCollisions();
 	void updateTanksCollision();
+	void updateEnemiesCollision();
 	void updateHitting();
 	void updateEnemies();
 	void updateGUI();

@@ -276,6 +276,21 @@ void Game::updateTanksCollision()
 	}
 }
 
+void Game::updateEnemiesCollision()
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		for (int k = i + 1; k < enemies.size(); k++)
+		{
+			if (enemies[i]->getPos().y > CELL * 4 && enemies[i]->getBounds().intersects(enemies[k]->getBounds()))
+			{
+				enemies[i]->setCanMove(false);
+				enemies[k]->setCanMove(false);
+			}
+		}
+	}
+}
+
 void Game::updateHitting()
 {
 	for (int e = 0; e < enemies.size(); e++)
@@ -355,6 +370,7 @@ void Game::update()
 	updateEnemies();
 	for (auto* e : enemies)
 		e->update();
+	updateEnemiesCollision();
 	//e&p
 	updateBullets();
 	updateHitting();
