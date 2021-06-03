@@ -330,6 +330,8 @@ void Game::updateHitting()
 					enemies.erase(enemies.begin() + e);
 					enemiesQuantity--;
 					enemiesQuantityKilled++; 
+					if (enemiesQuantityKilled == enemiesQuantityMax)
+						missionCompleted = true; 
 					e--;
 					
 				}
