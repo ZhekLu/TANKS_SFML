@@ -21,9 +21,9 @@ public:
 	~Game();
 
 	//functions
-	void run();
+	bool run();
 
-	void updatePollEvents();
+	//void updatePollEvents();
 	void updateInput();
 	void updateBullets();
 	void updateSceneCollision();
@@ -36,9 +36,14 @@ public:
 	void update();
 	void render();
 private:
-	//variables
+	//variables - system
 	bool gameIsOver = false; 
+	bool missionCompleted = false;
 
+	int enemiesQuantity;
+	int enemiesQuantityKilled;
+	int enemiesQuantityMax;
+	
 	int spawnEnemyTimer;
 	int spawnEnemyTimerMax;
 	Vector2f spawnPoints[7];
@@ -54,7 +59,7 @@ private:
 
 	//GUI
 	Font font; 
-	Text gameOverText;
+	Text gameEndText;
 
 	//fiunctions
 	void initWindow();

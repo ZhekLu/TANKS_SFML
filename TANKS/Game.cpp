@@ -22,28 +22,45 @@ Game::~Game()
 }
 
 //functions
-void Game::run()
+bool Game::run()
 {
 	while (window->isOpen())
 	{
-		updatePollEvents();
-		if(!gameIsOver)
+		Event e;
+		while (window->pollEvent(e))
+		{
+			if (e.type == Event::Closed)
+				this->window->close();
+			if (e.type == Event::KeyPressed && e.key.code == Keyboard::Escape)
+				window->close();
+			if (e.type == Event::KeyPressed && e.key.code == Keyboard::R)
+			{
+				window->close();
+				return 1;
+			}
+		}
+		if(!gameIsOver && !missionCompleted)
 			this->update();
 		this->render();
 	}
+	return 0;
 }
 
-void Game::updatePollEvents()
-{
-	Event e;
-	while (window->pollEvent(e))
-	{
-		if (e.type == Event::Closed)
-			this->window->close();
-		if (e.type == Event::KeyPressed && e.key.code == Keyboard::Escape)
-			window->close();
-	}
-}
+//void Game::updatePollEvents()
+//{
+//	Event e;
+//	while (window->pollEvent(e))
+//	{
+//		if (e.type == Event::Closed)
+//			this->window->close();
+//		if (e.type == Event::KeyPressed && e.key.code == Keyboard::Escape)
+//			window->close();
+//		if (e.type == Event::KeyPressed && e.key.code == Keyboard::Enter)
+//		{
+//			window->close();
+//		}
+//	}
+//}
 
 void Game::updateInput()
 {
@@ -58,7 +75,7 @@ void Game::updateInput()
 	else if (Keyboard::isKeyPressed(sf::Keyboard::S))
 		player->Move(Rotation::DOWN, 2.f);
 
-	if (Keyboard::isKeyPressed(sf::Keyboard::C) && this->player->canAttack())
+	if (Keyboard::isKeyPressed(sf::Keyboard::Enter) && this->player->canAttack())
 		player->Fire();
 
 	//Another Way
@@ -311,6 +328,8 @@ void Game::updateHitting()
 					deleted = true; 
 					delete enemies[e];
 					enemies.erase(enemies.begin() + e);
+					enemiesQuantity--;
+					enemiesQuantityKilled++; 
 					e--;
 					
 				}
@@ -340,11 +359,12 @@ void Game::updateEnemies()
 {
 	static int i = 0;
 	spawnEnemyTimer++;
-	if (spawnEnemyTimer >= spawnEnemyTimerMax)
+	if (spawnEnemyTimer >= spawnEnemyTimerMax && enemiesQuantity < 5) /*there*/
 	{
 		Enemy* newE = new Enemy(spawnPoints[i], 1.f);
 		enemies.push_back(newE);
 		spawnEnemyTimer = 0;
+		enemiesQuantity++; 
 		i++;
 		if (i > 6)
 			i = 0;
@@ -389,8 +409,20 @@ void Game::render()
 
 	for (auto* enemy : enemies)
 		enemy->render(window);
-	if(gameIsOver)
-		window->draw(gameOverText);
+	if (gameIsOver)
+	{
+		gameEndText.setString("Game over!");
+		gameEndText.setPosition(WIDTH / 2 - gameEndText.getGlobalBounds().width / 2.f,
+			HEIGHT / 2 - gameEndText.getGlobalBounds().height / 2.f);
+		window->draw(gameEndText);
+	}
+	if (missionCompleted)
+	{
+		gameEndText.setString("WIN!");
+		gameEndText.setPosition(WIDTH / 2 - gameEndText.getGlobalBounds().width / 2.f,
+			HEIGHT / 2 - gameEndText.getGlobalBounds().height / 2.f);
+		window->draw(gameEndText);
+	}
 
 	window->display();
 }
@@ -422,6 +454,10 @@ void Game::initEnemies()
 {
 	spawnEnemyTimerMax = 300;
 	spawnEnemyTimer = spawnEnemyTimerMax;
+
+	enemiesQuantity = 0;
+	enemiesQuantityKilled = 0;
+	enemiesQuantityMax = 20;
 
 	spawnPoints[0] = Vector2f(0, 0);
 	spawnPoints[6] = Vector2f(WIDTH - 35, 0);
@@ -497,11 +533,11 @@ void Game::initGUI()
 	//GAME OVER txt
 	if (!font.loadFromFile("resourses/PixellettersFull.ttf"))
 		std::cout << "ERROR::LOAD::FONT::GAME::resourses/PixellettersFull.ttf" << std::endl;
-	gameOverText.setFont(font);
-	gameOverText.setCharacterSize(70);
-	gameOverText.setFillColor(Color::White);
-	gameOverText.setString("Game over!");
-	gameOverText.setPosition(WIDTH / 2- gameOverText.getGlobalBounds().width / 2.f,
-		HEIGHT / 2 - gameOverText.getGlobalBounds().height / 2.f);
+	gameEndText.setFont(font);
+	gameEndText.setCharacterSize(70);
+	gameEndText.setFillColor(Color::White);
+	//gameEndText.setString("Game over!");
+	/*gameEndText.setPosition(WIDTH / 2- gameEndText.getGlobalBounds().width / 2.f,
+		HEIGHT / 2 - gameEndText.getGlobalBounds().height / 2.f);*/
 
 }
