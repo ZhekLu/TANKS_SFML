@@ -3,7 +3,7 @@
 Barrier::Barrier(int ax, int ay, int type, sf::Texture& texture)
 {
     this->type = (Type)type; 
-
+    hp = (type <= 2) ? 2 : 1; 
     //init sprite
     body.setTexture(texture);
     SetRect();
@@ -20,11 +20,11 @@ void Barrier::render(sf::RenderTarget* target)
     target->draw(body);
 }
 
-bool Barrier::loseHp(Rotation bulletRotation, int damage)
+bool Barrier::loseHp(const Rotation& bulletRotation, int damage)
 {
     if (type % 2)
         return true; 
-    if(type <= 2)
+    if(type < 3)
         Destroy(bulletRotation);
     hp -= damage;
     return hp > 0;
@@ -48,7 +48,7 @@ void Barrier::SetRect()
     }
 }
 
-void Barrier::Destroy(Rotation bulRot)
+void Barrier::Destroy(const Rotation& bulRot)
 {
     switch (bulRot)
     {

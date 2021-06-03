@@ -76,16 +76,40 @@ void Game::updateBullets()
 	for (auto* bullet : player->bullets)
 	{
 		bullet->update();
-
+		bool deleted = false; 
 		if (bullet->getBounds().top < 0.f || bullet->getBounds().top >= HEIGHT
 			|| bullet->getBounds().left < 0.f || bullet->getBounds().left >= WIDTH)
 		{	
 			delete player->bullets.at(counter);
 			player->bullets.erase(player->bullets.begin() + counter);
+			deleted = true; 
 			counter--;
+		}
+		if (!deleted)
+		{
+			int brCounter = 0;
+			for (auto* br : levelBarrier)
+			{
+				if (!deleted && bullet->getBounds().intersects(br->getBounds()))
+				{
+					if (!br->loseHp(bullet->getRotation()))
+					{
+						delete levelBarrier.at(brCounter);
+						levelBarrier.erase(levelBarrier.begin() + brCounter);
+						brCounter--;
+					}
+
+					delete player->bullets.at(counter);
+					player->bullets.erase(player->bullets.begin() + counter);
+					deleted = true;
+					counter--;
+				}
+				brCounter++;
+			}
 		}
 		counter++; 
 	}
+
 	//enemies
 	counter = 0;
 	for (auto* enemy : enemies)
@@ -93,13 +117,36 @@ void Game::updateBullets()
 		for (auto* bullet : enemy->bullets)
 		{
 			bullet->update();
-
+			bool deleted = false; 
 			if (bullet->getBounds().top < 0.f || bullet->getBounds().top >= HEIGHT
 				|| bullet->getBounds().left < 0.f || bullet->getBounds().left >= WIDTH)
 			{
 				delete enemy->bullets.at(counter);
 				enemy->bullets.erase(enemy->bullets.begin() + counter);
+				deleted = true;
 				counter--;
+			}
+			if (!deleted)
+			{
+				int brCounter = 0;
+				for (auto* br : levelBarrier)
+				{
+					if (!deleted && bullet->getBounds().intersects(br->getBounds()))
+					{
+						if (!br->loseHp(bullet->getRotation()))
+						{
+							delete levelBarrier.at(brCounter);
+							levelBarrier.erase(levelBarrier.begin() + brCounter);
+							brCounter--;
+						}
+						delete enemy->bullets.at(counter);
+						enemy->bullets.erase(enemy->bullets.begin() + counter);
+						deleted = true; 
+						counter--;
+
+					}
+					brCounter++; 
+				}
 			}
 			counter++;
 		}
@@ -156,6 +203,7 @@ void Game::updateLevelBarrierCollisions()
 		//player
 		if (player->getBounds().intersects(br->getBounds()))
 			player->Move(-2.f);
+
 		//enemies
 		for (auto* e : enemies)
 			if (e->getBounds().intersects(br->getBounds()))

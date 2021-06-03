@@ -16,7 +16,7 @@ public:
     const sf::FloatRect getBounds() const;
     //functions
     void render(sf::RenderTarget* target);
-    bool loseHp(Rotation bulletRotation, int damage = 1);
+    bool loseHp(const Rotation& bulletRotation, int damage = 1);
 private:
     //    variables
     int hp;
@@ -27,7 +27,7 @@ private:
 
     //  fun 
     void SetRect();
-    void Destroy(Rotation bulRot);
+    void Destroy(const Rotation& bulRot);
 };
 
 #endif // BARRIER_H
